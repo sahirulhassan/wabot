@@ -1,24 +1,28 @@
 {
-  "name": "whatsapp_sender",
+  "name": "wabot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest"
   },
-  "keywords": [],
-  "author": "",
+  "author": "sahir ul hassan",
   "license": "ISC",
-  "description": "",
+  "description": "a whatsapp bot",
+  "devDependencies": {
+    "eslint": "^9.38.0",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
+  },
   "dependencies": {
-    "@google-cloud/pubsub": "^5.2.0",
-    "@google-cloud/storage": "^7.17.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "morgan": "^1.10.1",
-    "multer": "^2.0.2",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.34.1"
   }

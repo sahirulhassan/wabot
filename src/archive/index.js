@@ -1,6 +1,6 @@
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require('fs.js').promises;
+const path = require('path.js');
 const qrcode = require('qrcode-terminal');
 
 async function readNumbers(filePath) {
