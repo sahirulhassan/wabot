@@ -1,8 +1,8 @@
 export default class AppError extends Error {
-  constructor(message, statusCode) {
-    super(typeof message === "string" ? message : undefined);
+  constructor(statusCode, userFriendlyError, realError) {
+    super(realError);
+    this.userFriendlyError = userFriendlyError;
     this.statusCode = statusCode;
-    this.messages = Array.isArray(message) ? message : [message]; // always store as array
     Error.captureStackTrace(this, this.constructor);
   }
 }
