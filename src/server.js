@@ -3,11 +3,12 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-import errorHandler from "./middleware/error-handling-middleware.js";
+import { errorHandlingMiddleware, upload } from "./middlewares.js";
 import {
   handleGetQRCode,
   handleGetStatus,
   handleLogout,
+  handleMessageSending,
 } from "./whatsapp-controllers.js";
 import client from "./client.js";
 
@@ -27,7 +28,8 @@ app.use(morgan("dev"));
 app.get("/status", handleGetStatus);
 app.get("/qr", handleGetQRCode);
 app.delete("/logout", handleLogout);
-app.use(errorHandler);
+app.post("/message", upload.array("files", 100), handleMessageSending);
+app.use(errorHandlingMiddleware);
 
 await client.initialize();
 const server = app.listen(process.env.PORT, () =>

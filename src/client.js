@@ -1,5 +1,5 @@
 import pkg from "whatsapp-web.js";
-const { Client, LocalAuth, MessageMedia } = pkg;
+const { Client, LocalAuth } = pkg;
 
 const client = new Client({ authStrategy: new LocalAuth() });
 client.state = "Unknown";

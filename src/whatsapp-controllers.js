@@ -1,6 +1,7 @@
 import client from "./client.js";
 import qrcode from "qrcode";
-import AppError from "./utils/AppError.js";
+import AppError from "./AppError.js";
+import { sendMessages } from "./whatsapp-services.js";
 
 export async function handleGetStatus(req, res) {
   res.status(200).json({ state: client.state });
@@ -30,4 +31,13 @@ export async function handleLogout(req, res) {
   client.qr = null;
   res.status(204).json({ message: "Logged out successfully" });
   client.initialize();
+}
+
+export async function handleMessageSending(req, res) {
+  const numbers = JSON.parse(req.body.numbers);
+  if (!numbers) throw new AppError(400, "Numbers are required.");
+  const message = req.body.message;
+  const files = req.files;
+  const log = await sendMessages(numbers, { message, files });
+  res.status(200).json({ message: "See log for details.", log });
 }
