@@ -28,6 +28,11 @@ export async function sendToNumber(number, payload) {
   }
 }
 
+async function sleep() {
+  const jitter = 6000 + Math.floor(Math.random() * 4000);
+  return new Promise((resolve) => setTimeout(resolve, jitter));
+}
+
 export async function sendMessages(numbers, payload) {
   if (client.state !== "ready") throw new AppError(401, "Client not ready.");
   if (!(payload.message || payload.files))
@@ -40,6 +45,7 @@ export async function sendMessages(numbers, payload) {
   for (const number of numbers) {
     const sent = await sendToNumber(number, payload);
     sentLog.log[number] = sent ? "Sent" : "Failed";
+    await sleep();
   }
   return sentLog;
 }
