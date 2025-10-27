@@ -34,18 +34,20 @@ async function sleep() {
 }
 
 export async function sendMessages(numbers, payload) {
-  if (client.state !== "ready") throw new AppError(401, "Client not ready.");
+  numbers = numbers.map(String);
+  if (client.state !== "Ready - You can start sending messages now.")
+    throw new AppError(401, "Client not ready.");
   if (!(payload.message || payload.files))
     throw new AppError(400, "Please provide at least 1 message or 1 file.");
   if (payload.files)
     payload.files = payload.files.map(
       async (f) => await MessageMedia.fromFilePath(f.path),
     );
-  let sentLog = { name: payload.files[0].destination.split("/")[1], log: {} };
+  let log = {};
   for (const number of numbers) {
     const sent = await sendToNumber(number, payload);
-    sentLog.log[number] = sent ? "Sent" : "Failed";
+    log[number] = sent ? "Sent" : "Failed";
     await sleep();
   }
-  return sentLog;
+  return log;
 }
