@@ -4,7 +4,19 @@ import AppError from "./AppError.js";
 import { sendMessages } from "./whatsapp-services.js";
 
 export async function handleGetStatus(req, res) {
-  res.status(200).json({ state: client.state });
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+
+  const send = (msg) => res.write(`data: ${msg}\n\n`);
+
+  send("Connected to server");
+
+  const interval = setInterval(() => {
+    send(client.state);
+  }, 3000);
+
+  req.on("close", () => clearInterval(interval));
 }
 
 export async function handleGetQRCode(req, res) {
