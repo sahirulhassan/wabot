@@ -22,7 +22,7 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in headers
   legacyHeaders: false,
 });
-app.use(cors({ origin: "http://localhost:63342" }));
+app.use(cors());
 app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
