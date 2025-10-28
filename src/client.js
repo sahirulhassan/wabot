@@ -2,7 +2,7 @@ import pkg from "whatsapp-web.js";
 const { Client, LocalAuth } = pkg;
 
 const client = new Client({ authStrategy: new LocalAuth() });
-client.state = "Unknown";
+client.state = "Unknown - Please wait...";
 client.on(
   "authenticated",
   () => (client.state = "Just logged in. Please wait for ready status."),
