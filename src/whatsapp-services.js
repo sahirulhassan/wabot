@@ -2,6 +2,7 @@ import client from "./client.js";
 import AppError from "./AppError.js";
 import pkg from "whatsapp-web.js";
 const { MessageMedia } = pkg;
+import joi from "joi";
 
 export async function sendToNumber(number, payload) {
   const id = await client.getNumberId(number);
@@ -51,3 +52,10 @@ export async function sendMessages(numbers, payload) {
   }
   return log;
 }
+
+const payloadSchema = joi.object({
+  number: joi
+    .string()
+    .pattern(/^\+[1-9]\d{9,14}$/)
+    .message("Phone must be in international format, e.g. +1234567890"),
+});
