@@ -8,14 +8,17 @@
 <body>
     <h1>Samaan360 WABot</h1>
     <p id="status">Status: Unknown</p>
-    <button disabled id="loginBtn" onclick="handleLogin()">Log in</button>
+    <button id="loginBtn" onclick="handleLogin()">Log in</button>
     <br>
-    <textarea rows="4" cols="50" placeholder="Enter comma-seperated phone numbers"></textarea>
-    <br>
-    <input type="file" multiple accept="image/*, video/*" id="fileInput">
-    <br>
-    <textarea rows="4" cols="50" placeholder="Enter message"></textarea>
-    <br>
-    <button id="sendBtn">Send</button>
+    <form action="http://localhost:1010/message/" method="POST" enctype="multipart/form-data">
+        <textarea name="numbers" id="numbersTextBox" rows="4" cols="50"
+                  placeholder="Enter comma-seperated phone numbers"></textarea>
+        <br>
+        <input name="files" id="fileInput" type="file" multiple accept="image/*, video/*">
+        <br>
+        <textarea name="message" id="messageTextBox" rows="4" cols="50" placeholder="Enter message"></textarea>
+        <br>
+        <button id="sendBtn" type="submit">Send</button>
+    </form>
 </body>
 </html>

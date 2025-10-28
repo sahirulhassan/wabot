@@ -46,8 +46,7 @@ export async function handleLogout(req, res) {
 }
 
 export async function handleMessageSending(req, res) {
-  const numbers = JSON.parse(req.body.numbers);
-  if (!numbers) throw new AppError(400, "Numbers are required.");
+  const numbers = req.body.numbers;
   const message = req.body.message;
   const files = req.files;
   const log = await sendMessages(numbers, { message, files });

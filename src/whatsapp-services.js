@@ -35,7 +35,8 @@ async function sleep() {
 }
 
 export async function sendMessages(numbers, payload) {
-  numbers = numbers.map(String);
+  if (!numbers) throw new AppError(400, "Please provide at least 1 number.");
+  numbers = numbers.split(",").map((n) => n.trim());
   if (client.state !== "Ready - You can start sending messages now.")
     throw new AppError(401, "Client not ready.");
   if (!(payload.message || payload.files))
