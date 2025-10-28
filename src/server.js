@@ -11,6 +11,7 @@ import {
   handleMessageSending,
 } from "./whatsapp-controllers.js";
 import client from "./client.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in headers
   legacyHeaders: false,
 });
+app.use(cors({ origin: "http://localhost:63342" }));
 app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
