@@ -42,8 +42,8 @@ export async function sendMessages(numbers, payload) {
   if (!(payload.message || payload.files))
     throw new AppError(400, "Please provide at least 1 message or 1 file.");
   if (payload.files)
-    payload.files = payload.files.map(
-      async (f) => await MessageMedia.fromFilePath(f.path),
+    payload.files = await Promise.all(
+      payload.files.map((f) => MessageMedia.fromFilePath(f.path)),
     );
   let log = {};
   for (const number of numbers) {
