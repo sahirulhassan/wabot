@@ -85,7 +85,7 @@ GET /qr
   "qr": "data:image/png;base64,..."
 }
 ```
-#### 2. Send Messages
+#### 3. Send Messages
 POST /message
 
 Content-Type: multipart/form-data
@@ -102,6 +102,16 @@ Numbers must be in international format without the '+' sign:
 ✅ Correct: 1234567890,9876543210<br>
 ❌ Incorrect: +1234567890,+9876543210<br>
 ❌ Incorrect: 123 (too short, minimum 7 digits)
+
+#### 4. Logout
+DELETE /logout
+
+**Response:**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
 
 🛡️ Rate Limiting
 The bot includes built-in rate limiting to prevent WhatsApp from blocking your number:
