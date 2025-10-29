@@ -2,8 +2,6 @@ import client from "./client.js";
 import qrcode from "qrcode";
 import AppError from "./AppError.js";
 import { logout, sendMessages } from "./whatsapp-services.js";
-import path from "path";
-import fs from "fs";
 
 export async function handleGetStatus(req, res) {
   res.setHeader("Content-Type", "text/event-stream");
