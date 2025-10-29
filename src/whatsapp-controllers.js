@@ -49,6 +49,10 @@ export async function handleMessageSending(req, res) {
   const numbers = req.body.numbers;
   const message = req.body.message;
   const files = req.files;
-  const log = await sendMessages(numbers, { message, files });
-  res.status(200).json({ message: "See log for details.", log });
+  const timestamp = req.timestamp;
+  sendMessages(numbers, { message, files, timestamp });
+  res.status(202).json({
+    message:
+      "Request received. Please wait while messages are sent. See log for details.",
+  });
 }

@@ -34,22 +34,6 @@ app.post("/message", upload.array("files", 100), handleMessageSending);
 app.use(errorHandlingMiddleware);
 
 await client.initialize();
-const server = app.listen(process.env.PORT, () =>
+app.listen(process.env.PORT, () =>
   console.log(`Server is running on port ${process.env.PORT}`),
 );
-
-async function shutdown(signal) {
-  console.log(`\nReceived ${signal}. Shutting down...`);
-  server.close(async (err) => {
-    if (err) {
-      console.error("Error closing server:", err);
-      process.exit(1);
-    }
-    await client.destroy();
-    console.log("Shutdown complete.");
-    process.exit(0);
-  });
-}
-
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);

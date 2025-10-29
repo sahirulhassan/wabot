@@ -2,7 +2,9 @@ import client from "./client.js";
 import AppError from "./AppError.js";
 import pkg from "whatsapp-web.js";
 const { MessageMedia } = pkg;
-import joi from "joi";
+import fs from "fs";
+import pLimit from "p-limit";
+const limit = pLimit(5);
 
 export async function sendToNumber(number, payload) {
   const id = await client.getNumberId(number);
@@ -10,10 +12,15 @@ export async function sendToNumber(number, payload) {
   else if (payload.message && !payload.files) {
     await client.sendMessage(id._serialized, payload.message);
     return true;
-  } else if (payload.files && !payload.message) {
-    await client.sendMessage(id._serialized, undefined, {
-      media: payload.files,
-    });
+  } else if (payload.files.length > 1 && !payload.message) {
+    const results = await Promise.allSettled(
+      payload.files.map((file) =>
+        limit(() => client.sendMessage(id._serialized, file)),
+      ),
+    );
+    return true;
+  } else if (!payload.message && payload.files.length === 1) {
+    await client.sendMessage(id._serialized, payload.files[0]);
     return true;
   } else if (payload.message && payload.files.length === 1) {
     await client.sendMessage(id._serialized, payload.files[0], {
@@ -21,9 +28,11 @@ export async function sendToNumber(number, payload) {
     });
     return true;
   } else if (payload.message && payload.files.length > 1) {
-    await client.sendMessage(id._serialized, undefined, {
-      media: payload.files,
-    });
+    const results = await Promise.allSettled(
+      payload.files.map((file) =>
+        limit(() => client.sendMessage(id._serialized, file)),
+      ),
+    );
     await client.sendMessage(id._serialized, payload.message);
     return true;
   }
@@ -45,18 +54,18 @@ export async function sendMessages(numbers, payload) {
     payload.files = await Promise.all(
       payload.files.map((f) => MessageMedia.fromFilePath(f.path)),
     );
-  let log = {};
-  for (const number of numbers) {
-    const sent = await sendToNumber(number, payload);
-    log[number] = sent ? "Sent" : "Failed";
-    await sleep();
-  }
-  return log;
+  //let log = {};
+  const results = await Promise.allSettled(
+    numbers.map((num) => limit(() => sendToNumber(num, payload))),
+  );
+  // for (const number of numbers) {
+  //   const sent = await sendToNumber(number, payload);
+  //   log[number] = sent ? "Sent" : "Failed";
+  //   await sleep();
+  // }
+  fs.mkdirSync("logs/", { recursive: true });
+  fs.writeFileSync(
+    `logs/${payload.timestamp}.json`,
+    JSON.stringify(results, null, 2),
+  );
 }
-
-const payloadSchema = joi.object({
-  number: joi
-    .string()
-    .pattern(/^\+[1-9]\d{9,14}$/)
-    .message("Phone must be in international format, e.g. +1234567890"),
-});
