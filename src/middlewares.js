@@ -12,20 +12,20 @@ export function errorHandlingMiddleware(err, req, res, next) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const now = new Date();
-    const dateTimeFolder = now
+    const timestamp = now
       .toISOString()
       .replace(/T/, "_") // turn '2025-10-27T13:45:22.000Z' → '2025-10-27_13:45:22.000Z'
       .replace(/:/g, "-") // remove colons → '2025-10-27_13-45-22.000Z'
       .split(".")[0]; // drop milliseconds
 
-    const uploadPath = path.join("uploads", dateTimeFolder);
+    req.timestamp = timestamp;
+    const uploadPath = path.join("uploads", timestamp);
     fs.mkdirSync(uploadPath, { recursive: true });
-
     cb(null, uploadPath);
   },
 
   filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
+    const uniqueName = `${req.timestamp}-${file.originalname}`;
     cb(null, uniqueName);
   },
 });
