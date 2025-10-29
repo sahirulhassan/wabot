@@ -1,7 +1,9 @@
 import client from "./client.js";
 import qrcode from "qrcode";
 import AppError from "./AppError.js";
-import { sendMessages } from "./whatsapp-services.js";
+import { logout, sendMessages } from "./whatsapp-services.js";
+import path from "path";
+import fs from "fs";
 
 export async function handleGetStatus(req, res) {
   res.setHeader("Content-Type", "text/event-stream");
@@ -38,11 +40,8 @@ export async function handleGetQRCode(req, res) {
 }
 
 export async function handleLogout(req, res) {
-  await client.logout();
-  client.state = "Logged out. Restarting";
-  client.qr = null;
+  await logout();
   res.status(204).json({ message: "Logged out successfully" });
-  client.initialize();
 }
 
 export async function handleMessageSending(req, res) {

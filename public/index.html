@@ -6,9 +6,10 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Samaan360 WABot</h1>
+    <h1>WABot</h1>
     <p id="status">Status: Unknown</p>
     <button id="loginBtn" onclick="handleLogin()">Log in</button>
+    <button id="logoutBtn" onclick="handleLogout()">Log out</button>
     <br>
     <form action="http://localhost:1010/message/" method="POST" enctype="multipart/form-data">
         <textarea name="numbers" id="numbersTextBox" rows="4" cols="50"

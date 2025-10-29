@@ -4,6 +4,7 @@ import pkg from "whatsapp-web.js";
 const { MessageMedia } = pkg;
 import fs from "fs";
 import pLimit from "p-limit";
+import path from "path";
 const limit = pLimit(5);
 
 async function sleep() {
@@ -120,4 +121,18 @@ export async function sendMessages(numbers, payload) {
     `logs/${payload.timestamp}.json`,
     JSON.stringify(results, null, 2),
   );
+}
+
+export async function logout() {
+  await client.logout();
+  client.state = "Logged out. Restarting";
+  client.qr = null;
+  const __dirname = path.resolve(); // gives absolute path to project root
+  const foldersToDelete = [".wwebjs_auth", ".wwebjs_cache"];
+  for (const folder of foldersToDelete) {
+    const folderPath = path.join(__dirname, folder);
+    if (fs.existsSync(folderPath))
+      fs.rmSync(folderPath, { recursive: true, force: true });
+  }
+  client.initialize();
 }
